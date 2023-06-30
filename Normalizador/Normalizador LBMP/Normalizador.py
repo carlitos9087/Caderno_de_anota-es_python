@@ -1,10 +1,7 @@
-from tkinter import Tk
-from tkinter.filedialog import askdirectory
 import PySimpleGUI as sg
 import pandas as pd
 import backend
-
-
+import os
 
 window = backend.tela
 tela = sg.Window('Normalizador', window, auto_size_text=True)
@@ -17,75 +14,68 @@ while True:                             # The Event Loop
     # event, values = sg.Window('Normalizador', tela, auto_size_text=True).read()
     # print("\n\nEvento: ",event,"\nvalor: \n", values)
 
-
-    tabelas_separadas = backend.capta_tabelas(values["-caminho-"])
+    print(values)
+    try:
+        tabelas_separadas = backend.capta_tabelas(values["-caminho-"])
     # print(tabelas_separadas) #####################
 
-    titulos = backend.ordenandor_titulos3(values["-caminho-"])
-    titulos_ordem = titulos.copy()
-    titulos_ordem.sort()
+        titulos = backend.ordenandor_titulos3(values["-caminho-"])
+        titulos_ordem = titulos.copy()
+        titulos_ordem.sort()
 
-    tabelas_juntas = backend.junta_tabelas(tabelas_separadas, titulos )
-    tabelas_juntas = tabelas_juntas[titulos_ordem]
+        tabelas_juntas = backend.junta_tabelas(tabelas_separadas, titulos )
+        tabelas_juntas = tabelas_juntas[titulos_ordem]
     # print(tabelas_juntas)  #####################
 
 
+    except:
+        sg.popup("Ocorreu um erro ao ler as srr files\nTente novamente.", title="Erro srr files")
+        continue
 
 
-    genes = backend.length(values["-caminho_Gene-"])
-    # print(genes) #####################
+    try:
+        genes = backend.length(values["-caminho_Gene-"])
+        # print(genes) #####################
 
-    #tabela com os genes
-    Gene_CDS_length = pd.read_excel(values["-caminho_Gene-"])
+        #tabela com os genes
+        Gene_CDS_length = pd.read_excel(values["-caminho_Gene-"])
 
-    hits = tabelas_juntas.loc[genes]
-    hits.index = Gene_CDS_length["Nome"]
-    # print(hits) #####################
+        hits = tabelas_juntas.loc[genes]
+        hits.index = Gene_CDS_length["Nome"]
+        # print(hits) #####################
 
+        total_reads = backend.somar_reads(tabelas_juntas)
+        # print(total_reads) #####################
+    except:
+        sg.popup("Ocorreu um erro ao ler as informações do gene\nTente novamente.", title="Erro gene info")
+        continue
+    try:
+        rpm= backend.RPM(hits,total_reads,titulos_ordem)
+    except:
+        sg.popup("Ocorreu um erro ao normalizar\nTente novamente.", title="Erro ")
+        continue
+    try:
+        rpkm = backend.RPKM(rpm,Gene_CDS_length)
+    except:
+        sg.popup("Ocorreu um erro ao normalizar\nTente novamente.", title="Erro ")
+        continue
+    try:
+        rpkm2 = backend.RPKM2(rpkm)
+    except:
+        sg.popup("Ocorreu um erro ao normalizar\nTente novamente.", title="Erro ")
+        continue
 
-
-    total_reads = backend.somar_reads(tabelas_juntas)
-    # print(total_reads) #####################
-
-    rpm= backend.RPM(hits,total_reads,titulos_ordem)
-
-    rpkm = backend.RPKM(rpm,Gene_CDS_length)
-
-    rpkm2 = backend.RPKM2(rpkm)
-   
     if event == "-RPM-":
-        root = Tk()
-        root.withdraw()  # Oculta a janela principal do tkinter
-        folder_path = askdirectory()  # Exibe o diálogo de seleção de pasta
-        if folder_path:
-            # Faça algo com o local de download selecionado
-            print('\n\nLocal de download selecionado:', folder_path)
-            rpm.to_excel(f"{folder_path}/{event}.xlsx")
-        root.destroy()  # Fecha a janela do tkinter   
+        folder_path = sg.popup_get_file("Salvar", save_as=True, file_types=('Excel Files', '*.xlsx'))
+        rpm.to_excel(f"{folder_path}{event}.xlsx")
             
     if event == "-RPKM-":
-        root = Tk()
-        root.withdraw()  # Oculta a janela principal do tkinter
-        folder_path = askdirectory()  # Exibe o diálogo de seleção de pasta
-        if folder_path:
-            # Faça algo com o local de download selecionado
-            print('\n\nLocal de download selecionado:', folder_path)
-            rpm.to_excel(f"{folder_path}/{event}.xlsx")
-        root.destroy()  # Fecha a janela do tkinter 
+        folder_path = sg.popup_get_file("Salvar", save_as=True, file_types=('Excel Files', '*.xlsx'))
+        rpkm.to_excel(f"{folder_path}{event}.xlsx")
 
     if event == "-Log2 RPKM-":
-        root = Tk()
-        root.withdraw()  # Oculta a janela principal do tkinter
-        folder_path = askdirectory()  # Exibe o diálogo de seleção de pasta
-        if folder_path:
-            # Faça algo com o local de download selecionado
-            print('\n\nLocal de download selecionado:', folder_path)
-            rpm.to_excel(f"{folder_path}/{event}.xlsx")
-        root.destroy()  # Fecha a janela do tkinter 
-
-        
-
-
+        folder_path = sg.popup_get_file("Salvar", save_as=True, file_types=('Excel Files', '*.xlsx'))
+        rpkm2.to_excel(f"{folder_path}{event}.xlsx")
 
 tela.close()
 

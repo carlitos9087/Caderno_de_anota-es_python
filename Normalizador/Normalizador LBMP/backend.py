@@ -4,9 +4,7 @@ import re
 import os
 import pandas as pd
 import PySimpleGUI as sg
-from PIL import Image
-from tkinter import Tk
-from tkinter.filedialog import askdirectory
+
 
 def capta_tabelas(caminho:str):
   df=[]
@@ -95,22 +93,11 @@ def RPKM2(RPKM):
   b = a.replace([np.inf, -np.inf], 0)
   return b
 
-def download(event, normalizacao):
-    root = Tk()
-    root.withdraw()  # Oculta a janela principal do tkinter
-    folder_path = askdirectory(title="salvar")  # Exibe o diálogo de seleção de pasta
-    if folder_path:
-        # Faça algo com o local de download selecionado
-        print('\n\nLocal de download selecionado:', folder_path)
-        normalizacao.to_excel(f"{folder_path}/{event}.xlsx")
-    root.destroy()  # Fecha a janela do tkinter   
-
-
-caminho="./Microsoft-Excel-logo-1.png"
-image = Image.open(caminho)
-resized_image = image.resize((50, 50))
-resized_image_path = './imagem_redimensionada.png'
-resized_image.save(resized_image_path)
+# caminho="./Microsoft-Excel-logo-1.png"
+# image = Image.open(caminho)
+# resized_image = image.resize((50, 50))
+caminho = './imagem_redimensionada.png'
+# resized_image.save(resized_image_path)
 
 form_rows =   sg.Frame('Dados',[
              [sg.Text('SRR files', size=(15, 1))],
@@ -119,7 +106,7 @@ form_rows =   sg.Frame('Dados',[
              [sg.InputText(''), sg.FileBrowse(key="-caminho_Gene-")],
              ], element_justification = 'left', expand_y=True, title_location=sg.TITLE_LOCATION_TOP)
 
-download =   sg.Frame('Download',[[sg.Image(resized_image_path, p=[20,20])],[sg.Button("RPM", key="-RPM-"),sg.Button("RPKM", key="-RPKM-"),sg.Button("Log2 RPKM", key="-Log2 RPKM-")]],
+download =   sg.Frame('Download',[[sg.Image(caminho, p=[20,20])],[sg.Button("RPM", key="-RPM-"),sg.Button("RPKM", key="-RPKM-"),sg.Button("Log2 RPKM", key="-Log2 RPKM-")]],
             element_justification = 'center', expand_x=True, title_location=sg.TITLE_LOCATION_TOP, pad=[0,20])
 
 tela = [[sg.Column([[form_rows],[download]])]]
