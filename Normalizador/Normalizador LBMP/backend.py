@@ -5,8 +5,24 @@ import os
 import pandas as pd
 import PySimpleGUI as sg
 
+sg.theme("DarkBlue")
+
+caminho_teste = "/home/carlitos/Documentos/Caderno_de_anotacoes_python/Normalizador/Dados/GSE162760"
 
 def capta_tabelas(caminho:str):
+  df=[]
+  for pasta in os.listdir(caminho):
+    if not pasta.endswith(".tabular"): continue
+
+    tabel = pd.read_table(os.path.join(caminho, pasta), sep="\t")
+    if tabel.index.name != 'Geneid':
+      tabel.set_index('Geneid', inplace=True)  #tornando a colula Geneid o id das tabelas
+    df.append(tabel)   #lendo tabelas tabelas
+  return df
+
+# print(capta_tabelas(caminho_teste))
+
+def capta_tabelas2(caminho:str):
   df=[]
   for num, pasta in enumerate(os.listdir(caminho)):
     if not pasta.endswith(".tabular"): continue
@@ -15,14 +31,16 @@ def capta_tabelas(caminho:str):
       df[num].set_index('Geneid', inplace=True)  #tornando a colula Geneid o id das tabelas
   return df
 
+
+
 def ordenandor_titulos3(caminho: str):
     lista_nomes = os.listdir(caminho)
-
     lista_nomes_corretos  = []
     lista_nomes_corretos2 = []
     lista_nomes_corretos3 = []
     resultado = []
     for titulo in lista_nomes:
+        if not titulo.endswith(".tabular"): continue
         # pattern = '_[a-zA-Z]+[0-9]*.tabular'
         pattern = '_[a-zA-Z]+[0-9 ]*.tabular'
         string = titulo
@@ -49,10 +67,11 @@ def ordenandor_titulos3(caminho: str):
           nomes_partidos.insert(num, "_")
         aux2 = "".join(nomes_partidos)
         resultado.append(aux2)
-
     return resultado
 
+
 def junta_tabelas(lista_tabelas:list, lista_titulos:list):
+    # print(lista_tabelas, "<-tabelas titulos->",lista_titulos)
     df_todos = pd.merge(lista_tabelas[0], lista_tabelas[1], on="Geneid")
 
     for itens in lista_tabelas[2:]:

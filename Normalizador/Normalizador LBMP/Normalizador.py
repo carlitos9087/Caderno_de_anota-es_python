@@ -6,6 +6,7 @@ import os
 window = backend.tela
 tela = sg.Window('Normalizador', window, auto_size_text=True)
     
+caminho_teste = "/home/carlitos/Documentos/Caderno_de_anotacoes_python/Normalizador/Dados/GSE162760"
 
 while True:                             # The Event Loop
     event, values = tela.read()
@@ -14,23 +15,27 @@ while True:                             # The Event Loop
     # event, values = sg.Window('Normalizador', tela, auto_size_text=True).read()
     # print("\n\nEvento: ",event,"\nvalor: \n", values)
 
-    print(values)
+    # print(values)
     try:
         tabelas_separadas = backend.capta_tabelas(values["-caminho-"])
-    # print(tabelas_separadas) #####################
+        print(tabelas_separadas[0] )#####################
 
         titulos = backend.ordenandor_titulos3(values["-caminho-"])
+        # print(titulos)#################
+
         titulos_ordem = titulos.copy()
         titulos_ordem.sort()
-
+    
         tabelas_juntas = backend.junta_tabelas(tabelas_separadas, titulos )
+        # print(tabelas_juntas,"dsafdsafdsgfdagf")
         tabelas_juntas = tabelas_juntas[titulos_ordem]
-    # print(tabelas_juntas)  #####################
-
+        # print(tabelas_juntas)  #####################
 
     except:
         sg.popup("Ocorreu um erro ao ler as srr files\nTente novamente.", title="Erro srr files")
         continue
+
+
 
 
     try:
