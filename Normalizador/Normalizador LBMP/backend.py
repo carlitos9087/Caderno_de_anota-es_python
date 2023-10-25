@@ -22,18 +22,8 @@ def capta_tabelas(caminho:str):
 
 # print(capta_tabelas(caminho_teste))
 
-def capta_tabelas2(caminho:str):
-  df=[]
-  for num, pasta in enumerate(os.listdir(caminho)):
-    if not pasta.endswith(".tabular"): continue
-    df.append(pd.read_table(os.path.join(caminho, pasta)))   #lendo tabelas tabelas
-    if df[num].index.name != 'Geneid':
-      df[num].set_index('Geneid', inplace=True)  #tornando a colula Geneid o id das tabelas
-  return df
 
-
-
-def ordenandor_titulos3(caminho: str):
+'''def ordenandor_titulos3(caminho: str):
     lista_nomes = os.listdir(caminho)
     lista_nomes_corretos  = []
     lista_nomes_corretos2 = []
@@ -68,6 +58,16 @@ def ordenandor_titulos3(caminho: str):
         aux2 = "".join(nomes_partidos)
         resultado.append(aux2)
     return resultado
+    # return lista_nomes'''
+
+def ordenandor_titulos3(caminho: str):
+  lista_nomes = os.listdir(caminho)
+  nomes = []
+  for i in lista_nomes:
+      if ".tabular" not  in i : continue
+      nomes.append(re.sub(".tabular","", i))#['Control_Non-infected', 'SRR13207482.tabular']
+      # print(i)
+  return nomes
 
 
 def junta_tabelas(lista_tabelas:list, lista_titulos:list):
@@ -118,6 +118,13 @@ def RPKM2(RPKM):
 caminho = './imagem_redimensionada.png'
 # resized_image.save(resized_image_path)
 
+
+if caminho[2:] in os.listdir(os.getcwd()):
+  imagem = [sg.Image(caminho, p=[20,20])]
+
+else:
+  imagem = []
+
 form_rows =   sg.Frame('Dados',[
              [sg.Text('SRR files', size=(15, 1))],
              [sg.InputText('',), sg.FolderBrowse(key="-caminho-")],
@@ -125,7 +132,7 @@ form_rows =   sg.Frame('Dados',[
              [sg.InputText(''), sg.FileBrowse(key="-caminho_Gene-")],
              ], element_justification = 'left', expand_y=True, title_location=sg.TITLE_LOCATION_TOP)
 
-download =   sg.Frame('Download',[[sg.Image(caminho, p=[20,20])],[sg.Button("RPM", key="-RPM-"),sg.Button("RPKM", key="-RPKM-"),sg.Button("Log2 RPKM", key="-Log2 RPKM-")]],
+download =   sg.Frame('Download',[imagem,[sg.Button("RPM", key="-RPM-"),sg.Button("RPKM", key="-RPKM-"),sg.Button("Log2 RPKM", key="-Log2 RPKM-")]],
             element_justification = 'center', expand_x=True, title_location=sg.TITLE_LOCATION_TOP, pad=[0,20])
 
 tela = [[sg.Column([[form_rows],[download]])]]

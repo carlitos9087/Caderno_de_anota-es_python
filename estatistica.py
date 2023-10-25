@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import statistics as stat
+import pandas as pd
+
+
 
 sg.theme('DarkTeal9')
 # sg.theme('DarkTeal12')

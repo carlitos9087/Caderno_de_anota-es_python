@@ -3,6 +3,7 @@ import pandas as pd
 import backend
 import os
 
+
 window = backend.tela
 tela = sg.Window('Normalizador', window, auto_size_text=True)
     
@@ -18,7 +19,7 @@ while True:                             # The Event Loop
     # print(values)
     try:
         tabelas_separadas = backend.capta_tabelas(values["-caminho-"])
-        print(tabelas_separadas[0] )#####################
+        # print(tabelas_separadas[0] )#####################
 
         titulos = backend.ordenandor_titulos3(values["-caminho-"])
         # print(titulos)#################
