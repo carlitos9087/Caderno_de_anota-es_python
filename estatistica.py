@@ -294,7 +294,21 @@ while True:
             canvas.get_tk_widget().pack(side='top', fill='both', expand=1)
       #Atualiza o grafico com novos valores de X e YX_
         update_graph()
-      # Calcula a autosomma e media de dados X e Y 
+      # Calcula a autosomme depende da sua preferência e da estratégia de colaboração da sua equipe. Aqui estão as duas opções:
+
+'''Merge:
+
+shell
+￼Copy code
+git merge origin/sua-branch-remota
+Isso criará um novo commit de mesclagem na sua branch local, que combina as alterações da sua branch remota com as suas. Essa é uma abordagem mais comum se você está trabalhando em colaboração com outras pessoas.
+
+Rebase:
+
+shell
+￼Copy code
+git rebase origin/sua-branch-remota
+O rebase reescreverá o histórico da sua a e media de dados X e Y 
         sum_x = np.sum(x)
         sum_y = np.sum(y)
         mean_x = np.mean(x)
@@ -399,3 +413,4 @@ while True:
 
 window.close()
 
+'''
