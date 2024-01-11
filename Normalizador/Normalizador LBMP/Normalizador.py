@@ -7,7 +7,7 @@ import os
 window = backend.tela
 tela = sg.Window('Normalizador', window, auto_size_text=True)
     
-caminho_teste = "/home/carlitos/Documentos/Caderno_de_anotacoes_python/Normalizador/Dados/GSE162760"
+# caminho_teste = "/home/carlitos/Documentos/Caderno_de_anotacoes_python/Normalizador/Dados/GSE162760"
 
 while True:                             # The Event Loop
     event, values = tela.read()
